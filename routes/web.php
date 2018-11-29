@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/', 'WelcomeController@index');
+Route::get('/', 'TeamController@index');
 Auth::routes();
 
 Route::get('/dashboard', 'HomeController@index')->name('dashboard');

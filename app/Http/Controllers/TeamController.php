@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Team;
 
-class WelcomeController extends Controller
+class TeamController extends Controller
 {
     public function index()
     {
@@ -14,7 +14,7 @@ class WelcomeController extends Controller
         $teams = Team::all()->sortBy('name');
         $unassigned = $this->getUnassignedPeople();
         return view(
-            'welcome',
+            'team.index',
             compact(
                 'teams',
                 'unassigned'

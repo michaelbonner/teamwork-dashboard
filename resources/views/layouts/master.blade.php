@@ -59,7 +59,7 @@
             </div>
         @endif
 
-        <div class="mt-6">
+        <div class="mt-6 w-full">
             @yield('content')
         </div>
 

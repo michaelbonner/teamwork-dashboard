@@ -11,7 +11,10 @@
 |
 */
 
-Route::get('/', 'TeamController@index');
+Route::get('/', 'TeamController@index')
+    ->name('team.index');
+Route::get('/team/{team}', 'TeamController@show')
+    ->name('team.show');
 Auth::routes();
 
 Route::get('/dashboard', 'HomeController@index')->name('dashboard');

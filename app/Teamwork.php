@@ -5,6 +5,7 @@ namespace App;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Carbon;
 
 class Teamwork
 {
@@ -52,7 +53,37 @@ class Teamwork
             $this->getRequest(
                 '/tasks.json?responsible-party-ids=' .
                 $person
-            )
+            )->{'todo-items'}
+        );
+    }
+    
+    public function getWeeklyTasksForPerson(int $person, Carbon $date)
+    {
+        $startDate = $date->copy()->startOfWeek();
+        $endDate = $date->copy()->endOfWeek();
+
+        return collect(
+            $this->getRequest(
+                '/tasks.json?' .
+                'responsible-party-ids=' . $person .
+                '&startDate=' . $startDate->format('Ymd') .
+                '&endDate=' . $endDate->format('Ymd')
+            )->{'todo-items'}
+        );
+    }
+    
+    public function getTasksForPersonBetweenDates(
+        int $person,
+        Carbon $startDate,
+        Carbon $endDate
+    ) {
+        return collect(
+            $this->getRequest(
+                '/tasks.json?' .
+                'responsible-party-ids=' . $person .
+                '&startDate=' . $startDate->format('Ymd') .
+                '&endDate=' . $endDate->format('Ymd')
+            )->{'todo-items'}
         );
     }
 

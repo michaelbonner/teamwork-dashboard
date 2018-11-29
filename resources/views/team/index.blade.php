@@ -32,7 +32,7 @@
                                 class="mt-4"
                             >
                                 <a 
-                                    href="#"
+                                    href="{{ route('team.show', $team->id) }}"
                                     class="bg-transparent hover:bg-blue no-underline text-blue-dark font-semibold hover:text-white py-2 px-4 border border-blue hover:border-transparent rounded"
                                     >
                                     View Status

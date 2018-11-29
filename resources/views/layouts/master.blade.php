@@ -14,7 +14,7 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body class="bg-gray-lightest font-sans font-normal antialiased">
-    <div class="flex flex-col">
+    <div class="flex mt-6">
         @if(Route::has('login'))
             <div class="absolute pin-t pin-r mt-4 mr-4">
                 @auth
@@ -59,7 +59,9 @@
             </div>
         @endif
 
-        @yield('content')
+        <div class="mt-6">
+            @yield('content')
+        </div>
 
     <!-- Scripts -->
     <script src="{{ mix('js/app.js') }}"></script>

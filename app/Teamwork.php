@@ -82,6 +82,8 @@ class Teamwork
                 '/tasks.json?' .
                 'responsible-party-ids=' . $person .
                 '&startDate=' . $startDate->format('Ymd') .
+                '&includeCompletedTasks=true' .
+                '&includeCompletedSubtasks=true' .
                 '&endDate=' . $endDate->format('Ymd')
             )->{'todo-items'}
         );

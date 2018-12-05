@@ -40,7 +40,7 @@
                     </div>
                     <div>
                         <a 
-                            :href="teamworkUrl"
+                            :href="teamworkMemberUrl"
                             target="_blank"
                             class="text-xs font-semibold rounded-full px-4 py-1 leading-normal bg-white border border-blue text-blue hover:bg-blue hover:text-white no-underline"
                         >
@@ -67,7 +67,7 @@
                 <p
                     class="my-1 text-right mx-4"
                 >
-                    {{ totalHours }} assigned of 36 available
+                    {{ totalHours }} assigned of 36 available hours
                 </p>                
             </div>
 
@@ -80,13 +80,40 @@
                         <div
                             v-for="project in projects"
                             :key="project.id"
-                            class="my-2"
+                            class="my-4"
                         >
                             <p
                                 class="my-1"
                             >
-                                {{ project }}
+                                <a 
+                                    :href="project.link"
+                                    class="text-blue no-underline"
+                                    target="_blank"
+                                >
+                                    {{ project.name }}
+                                </a>
                             </p>
+                            <p
+                                class="my-1 text-sm text-grey-dark"
+                            >
+                                {{ project.completed }}/{{ project.total }} hours completed
+                            </p>
+
+                            <!-- <button
+                                class="text-right"
+                                @click="toggleShowTasks(project)"
+                            >
+                                Show Tasks
+                            </button>
+
+                            <ul v-if="project.showTasks">
+                                <li
+                                    v-for="task in project.tasks"
+                                    :key="task.id"
+                                >
+                                    {{ task.content }}
+                                </li>
+                            </ul> -->
 
                             <div
                                 class="overflow-hidden"
@@ -95,10 +122,10 @@
                                     class="shadow w-full bg-grey-light"
                                 >
                                     <div 
-                                        class="bg-blue text-xs leading-none py-1 text-center text-white"
-                                        :style="capacityBarStyle"
+                                        :class="project.capacityBarClasses"
+                                        :style="project.capacityBarStyle"
                                     >
-                                        {{capacity}}%
+                                        {{project.capacity}}%
                                     </div>
                                 </div>
                             </div>
@@ -119,7 +146,8 @@
             return {
                 memberData: [],
                 tasks: [],
-                teamworkUrl: '',
+                teamworkUrl: document.head.querySelector('meta[name="teamwork-url"]').content,
+                teamworkMemberUrl: '',
             }
         },
         mounted() {
@@ -134,7 +162,10 @@
                     return item['project-name'];
                 })
                 .filter(this.onlyUnique)
-                .sort();
+                .sort()
+                .map((project, i) => {
+                    return this.getProjectData(project);
+                });
             },
             capacity: function() {
                 return Math.round((this.member.estimatedMinutes / 60) / 36 * 100);
@@ -162,7 +193,7 @@
                 this.getMemberData()
                     .then((data) => {
                         this.memberData = data.person;
-                        this.teamworkUrl = `https://go.redolive.com/#people/${this.memberData.id}/tasks`;
+                        this.teamworkMemberUrl = `${this.teamworkUrl}/#people/${this.memberData.id}/tasks`;
                     })
                     .then((data) => {
                         this.getMemberTasks()
@@ -185,6 +216,41 @@
             },
             onlyUnique: function(value, index, self) { 
                 return self.indexOf(value) === index;
+            },
+            getProjectData: function(project){
+                const tasks = this.tasks.filter(function(task, i){
+                    return task['project-name'] == project;
+                });
+                const total = Math.round( tasks.map(function(item,i){
+                    return +item['estimated-minutes'];
+                }).reduce(function(total, item){
+                    return total + item;
+                }) / 60 );
+                const completed = Math.round( tasks.map(function(item,i){
+                    if (item['status'] != 'completed') {
+                        return 0;
+                    }
+                    return +item['estimated-minutes'];
+                }).reduce(function(total, item){
+                    return total + item;
+                }) / 60 );
+                const percentComplete = Math.round(
+                    completed / total * 100
+                );
+
+                const bgColor = percentComplete >= 100 ? 'bg-green' : 'bg-blue';
+
+                return {
+                    'name': project,
+                    'tasks': tasks,
+                    total,
+                    completed,
+                    capacityBarStyle: `width: ${percentComplete}%`,
+                    capacity: percentComplete,
+                    capacityBarClasses: `${bgColor} text-xs leading-none py-1 text-center text-white`,
+                    remaining: total - completed,
+                    link: `${this.teamworkUrl}/#projects/${tasks[0]['project-id']}/tasks`
+                };
             }
         }
     }

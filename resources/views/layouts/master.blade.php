@@ -7,6 +7,7 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="teamwork-url" content="{{ config('teamwork.endpoint') }}">
 
     <title>@yield('title')</title>
 

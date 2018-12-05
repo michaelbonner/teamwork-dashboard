@@ -33171,6 +33171,33 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['member'],
@@ -33178,7 +33205,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             memberData: [],
             tasks: [],
-            teamworkUrl: ''
+            teamworkUrl: document.head.querySelector('meta[name="teamwork-url"]').content,
+            teamworkMemberUrl: ''
         };
     },
     mounted: function mounted() {
@@ -33192,9 +33220,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     computed: {
         projects: function projects() {
+            var _this2 = this;
+
             return this.tasks.map(function (item, i) {
                 return item['project-name'];
-            }).filter(this.onlyUnique).sort();
+            }).filter(this.onlyUnique).sort().map(function (project, i) {
+                return _this2.getProjectData(project);
+            });
         },
         capacity: function capacity() {
             return Math.round(this.member.estimatedMinutes / 60 / 36 * 100);
@@ -33219,14 +33251,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     methods: {
         fetchData: function fetchData() {
-            var _this2 = this;
+            var _this3 = this;
 
             this.getMemberData().then(function (data) {
-                _this2.memberData = data.person;
-                _this2.teamworkUrl = 'https://go.redolive.com/#people/' + _this2.memberData.id + '/tasks';
+                _this3.memberData = data.person;
+                _this3.teamworkMemberUrl = _this3.teamworkUrl + '/#people/' + _this3.memberData.id + '/tasks';
             }).then(function (data) {
-                _this2.getMemberTasks().then(function (data) {
-                    _this2.tasks = data;
+                _this3.getMemberTasks().then(function (data) {
+                    _this3.tasks = data;
                 });
             });
         },
@@ -33242,6 +33274,39 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         onlyUnique: function onlyUnique(value, index, self) {
             return self.indexOf(value) === index;
+        },
+        getProjectData: function getProjectData(project) {
+            var tasks = this.tasks.filter(function (task, i) {
+                return task['project-name'] == project;
+            });
+            var total = Math.round(tasks.map(function (item, i) {
+                return +item['estimated-minutes'];
+            }).reduce(function (total, item) {
+                return total + item;
+            }) / 60);
+            var completed = Math.round(tasks.map(function (item, i) {
+                if (item['status'] != 'completed') {
+                    return 0;
+                }
+                return +item['estimated-minutes'];
+            }).reduce(function (total, item) {
+                return total + item;
+            }) / 60);
+            var percentComplete = Math.round(completed / total * 100);
+
+            var bgColor = percentComplete >= 100 ? 'bg-green' : 'bg-blue';
+
+            return {
+                'name': project,
+                'tasks': tasks,
+                total: total,
+                completed: completed,
+                capacityBarStyle: 'width: ' + percentComplete + '%',
+                capacity: percentComplete,
+                capacityBarClasses: bgColor + ' text-xs leading-none py-1 text-center text-white',
+                remaining: total - completed,
+                link: this.teamworkUrl + '/#projects/' + tasks[0]['project-id'] + '/tasks'
+            };
         }
     }
 });
@@ -33310,7 +33375,7 @@ var render = function() {
                 {
                   staticClass:
                     "text-xs font-semibold rounded-full px-4 py-1 leading-normal bg-white border border-blue text-blue hover:bg-blue hover:text-white no-underline",
-                  attrs: { href: _vm.teamworkUrl, target: "_blank" }
+                  attrs: { href: _vm.teamworkMemberUrl, target: "_blank" }
                 },
                 [
                   _vm._v(
@@ -33341,7 +33406,7 @@ var render = function() {
             _vm._v(
               "\n                " +
                 _vm._s(_vm.totalHours) +
-                " assigned of 36 available\n            "
+                " assigned of 36 available hours\n            "
             )
           ])
         ]),
@@ -33351,12 +33416,31 @@ var render = function() {
             "div",
             { staticClass: "mb-2" },
             _vm._l(_vm.projects, function(project) {
-              return _c("div", { key: project.id, staticClass: "my-2" }, [
+              return _c("div", { key: project.id, staticClass: "my-4" }, [
                 _c("p", { staticClass: "my-1" }, [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "text-blue no-underline",
+                      attrs: { href: project.link, target: "_blank" }
+                    },
+                    [
+                      _vm._v(
+                        "\n                                " +
+                          _vm._s(project.name) +
+                          "\n                            "
+                      )
+                    ]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("p", { staticClass: "my-1 text-sm text-grey-dark" }, [
                   _vm._v(
                     "\n                            " +
-                      _vm._s(project) +
-                      "\n                        "
+                      _vm._s(project.completed) +
+                      "/" +
+                      _vm._s(project.total) +
+                      " hours completed\n                        "
                   )
                 ]),
                 _vm._v(" "),
@@ -33365,14 +33449,13 @@ var render = function() {
                     _c(
                       "div",
                       {
-                        staticClass:
-                          "bg-blue text-xs leading-none py-1 text-center text-white",
-                        style: _vm.capacityBarStyle
+                        class: project.capacityBarClasses,
+                        style: project.capacityBarStyle
                       },
                       [
                         _vm._v(
                           "\n                                    " +
-                            _vm._s(_vm.capacity) +
+                            _vm._s(project.capacity) +
                             "%\n                                "
                         )
                       ]

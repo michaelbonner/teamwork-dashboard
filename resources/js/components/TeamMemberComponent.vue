@@ -42,7 +42,7 @@
                         <a 
                             :href="teamworkUrl"
                             target="_blank"
-                            class="text-xs font-semibold rounded-full px-4 py-1 leading-normal bg-white border border-purple text-purple hover:bg-purple hover:text-white no-underline"
+                            class="text-xs font-semibold rounded-full px-4 py-1 leading-normal bg-white border border-blue text-blue hover:bg-blue hover:text-white no-underline"
                         >
                             View Tasks
                         </a>
@@ -63,24 +63,48 @@
                         {{capacity}}%
                     </div>
                 </div>
+
+                <p
+                    class="my-1 text-right mx-4"
+                >
+                    {{ totalHours }} total hrs
+                </p>                
             </div>
 
             <div
-                class="px-6 py-4"
+                class="mx-6 px-6 py-4"
             >
                 <div
                     class="mb-2"
                 >
-                    <ul>
-                        <li
+                        <div
                             v-for="project in projects"
                             :key="project.id"
+                            class="my-2"
                         >
-                            {{ project }}
-                        </li>
+                            <p
+                                class="my-1"
+                            >
+                                {{ project }}
+                            </p>
+
+                            <div
+                                class="overflow-hidden"
+                            >
+                                <div 
+                                    class="shadow w-full bg-grey-light"
+                                >
+                                    <div 
+                                        class="bg-blue text-xs leading-none py-1 text-center text-white"
+                                        :style="capacityBarStyle"
+                                    >
+                                        {{capacity}}%
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </ul>
                 </div>
-                {{ member.estimatedMinutes / 60 }} hrs
             </div>
         </div>
     </div>
@@ -119,8 +143,18 @@
                 return `width: ${this.capacity}%`;
             },
             capacityBarClasses: function() {
-                const bg = this.capacity > 90 ? 'bg-red' : this.capacity > 50 ? 'bg-orange' : 'bg-blue';
+                const bg = this.capacity > 90 ? 'bg-red' : this.capacity > 80 ? 'bg-orange' : 'bg-blue';
                 return `${bg} text-xs leading-none py-1 text-center text-white`;
+            },
+            totalHours: function() {
+                if(!this.tasks.length){
+                    return 0;
+                }
+                return Math.round( this.tasks.map(function(item,i){
+                    return +item['estimated-minutes'];
+                }).reduce(function(total, item){
+                    return total + item;
+                }) / 60 );
             }
         },
         methods: {

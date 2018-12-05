@@ -33147,6 +33147,30 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['member'],
@@ -33179,8 +33203,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             return 'width: ' + this.capacity + '%';
         },
         capacityBarClasses: function capacityBarClasses() {
-            var bg = this.capacity > 90 ? 'bg-red' : this.capacity > 50 ? 'bg-orange' : 'bg-blue';
+            var bg = this.capacity > 90 ? 'bg-red' : this.capacity > 80 ? 'bg-orange' : 'bg-blue';
             return bg + ' text-xs leading-none py-1 text-center text-white';
+        },
+        totalHours: function totalHours() {
+            if (!this.tasks.length) {
+                return 0;
+            }
+            return Math.round(this.tasks.map(function (item, i) {
+                return +item['estimated-minutes'];
+            }).reduce(function (total, item) {
+                return total + item;
+            }) / 60);
         }
     },
     methods: {
@@ -33275,7 +33309,7 @@ var render = function() {
                 "a",
                 {
                   staticClass:
-                    "text-xs font-semibold rounded-full px-4 py-1 leading-normal bg-white border border-purple text-purple hover:bg-purple hover:text-white no-underline",
+                    "text-xs font-semibold rounded-full px-4 py-1 leading-normal bg-white border border-blue text-blue hover:bg-blue hover:text-white no-underline",
                   attrs: { href: _vm.teamworkUrl, target: "_blank" }
                 },
                 [
@@ -33301,28 +33335,52 @@ var render = function() {
                 )
               ]
             )
+          ]),
+          _vm._v(" "),
+          _c("p", { staticClass: "my-1 text-right mx-4" }, [
+            _vm._v(
+              "\n                " +
+                _vm._s(_vm.totalHours) +
+                " total hrs\n            "
+            )
           ])
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "px-6 py-4" }, [
-          _c("div", { staticClass: "mb-2" }, [
-            _c(
-              "ul",
-              _vm._l(_vm.projects, function(project) {
-                return _c("li", { key: project.id }, [
+        _c("div", { staticClass: "mx-6 px-6 py-4" }, [
+          _c(
+            "div",
+            { staticClass: "mb-2" },
+            _vm._l(_vm.projects, function(project) {
+              return _c("div", { key: project.id, staticClass: "my-2" }, [
+                _c("p", { staticClass: "my-1" }, [
                   _vm._v(
-                    "\n                        " +
+                    "\n                            " +
                       _vm._s(project) +
-                      "\n                    "
+                      "\n                        "
                   )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "overflow-hidden" }, [
+                  _c("div", { staticClass: "shadow w-full bg-grey-light" }, [
+                    _c(
+                      "div",
+                      {
+                        staticClass:
+                          "bg-blue text-xs leading-none py-1 text-center text-white",
+                        style: _vm.capacityBarStyle
+                      },
+                      [
+                        _vm._v(
+                          "\n                                    " +
+                            _vm._s(_vm.capacity) +
+                            "%\n                                "
+                        )
+                      ]
+                    )
+                  ])
                 ])
-              })
-            )
-          ]),
-          _vm._v(
-            "\n            " +
-              _vm._s(_vm.member.estimatedMinutes / 60) +
-              " hrs\n        "
+              ])
+            })
           )
         ])
       ]

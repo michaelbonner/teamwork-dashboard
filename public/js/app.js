@@ -33341,7 +33341,7 @@ var render = function() {
             _vm._v(
               "\n                " +
                 _vm._s(_vm.totalHours) +
-                " total hrs\n            "
+                " assigned of 36 available\n            "
             )
           ])
         ]),

@@ -67,7 +67,7 @@
                 <p
                     class="my-1 text-right mx-4"
                 >
-                    {{ totalHours }} total hrs
+                    {{ totalHours }} assigned of 36 available
                 </p>                
             </div>
 

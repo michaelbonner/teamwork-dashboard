@@ -33177,6 +33177,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         capacityBarStyle: function capacityBarStyle() {
             return 'width: ' + this.capacity + '%';
+        },
+        capacityBarClasses: function capacityBarClasses() {
+            var bg = this.capacity > 90 ? 'bg-red' : this.capacity > 50 ? 'bg-orange' : 'bg-blue';
+            return bg + ' text-xs leading-none py-1 text-center text-white';
         }
     },
     methods: {
@@ -33288,11 +33292,7 @@ var render = function() {
           _c("div", { staticClass: "shadow w-full bg-grey-light" }, [
             _c(
               "div",
-              {
-                staticClass:
-                  "bg-blue text-xs leading-none py-1 text-center text-white",
-                style: _vm.capacityBarStyle
-              },
+              { class: _vm.capacityBarClasses, style: _vm.capacityBarStyle },
               [
                 _vm._v(
                   "\n                    " +

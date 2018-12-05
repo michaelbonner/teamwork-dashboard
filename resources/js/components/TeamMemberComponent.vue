@@ -57,7 +57,7 @@
                     class="shadow w-full bg-grey-light"
                 >
                     <div 
-                        class="bg-blue text-xs leading-none py-1 text-center text-white" 
+                        :class="capacityBarClasses"
                         :style="capacityBarStyle"
                     >
                         {{capacity}}%
@@ -117,6 +117,10 @@
             },
             capacityBarStyle: function() {
                 return `width: ${this.capacity}%`;
+            },
+            capacityBarClasses: function() {
+                const bg = this.capacity > 90 ? 'bg-red' : this.capacity > 50 ? 'bg-orange' : 'bg-blue';
+                return `${bg} text-xs leading-none py-1 text-center text-white`;
             }
         },
         methods: {

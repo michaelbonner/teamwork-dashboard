@@ -17,7 +17,7 @@ class Teamwork
     protected function getRequest($path)
     {
         try {
-            Cache::forget('teamwork-' . $path);
+            // Cache::forget('teamwork-' . $path);
             return Cache::remember('teamwork-' . $path, 15, function () use ($path) {
                 $request = $this->client->request('GET', $path);
                 return json_decode($request->getBody());

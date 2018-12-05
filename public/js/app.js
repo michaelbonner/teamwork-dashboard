@@ -996,7 +996,7 @@ window.Vue = __webpack_require__(34);
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key)))
 
-Vue.component('example-component', __webpack_require__(37));
+Vue.component('team-member-component', __webpack_require__(46));
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -32898,53 +32898,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(4)))
 
 /***/ }),
-/* 37 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(38)
-/* script */
-var __vue_script__ = __webpack_require__(39)
-/* template */
-var __vue_template__ = __webpack_require__(40)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/js/components/ExampleComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-299e239e", Component.options)
-  } else {
-    hotAPI.reload("data-v-299e239e", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
+/* 37 */,
 /* 38 */
 /***/ (function(module, exports) {
 
@@ -33054,7 +33008,66 @@ module.exports = function normalizeComponent (
 
 
 /***/ }),
-/* 39 */
+/* 39 */,
+/* 40 */,
+/* 41 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 42 */,
+/* 43 */,
+/* 44 */,
+/* 45 */,
+/* 46 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(38)
+/* script */
+var __vue_script__ = __webpack_require__(47)
+/* template */
+var __vue_template__ = __webpack_require__(48)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/TeamMemberComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-27240a4b", Component.options)
+  } else {
+    hotAPI.reload("data-v-27240a4b", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 47 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -33075,61 +33088,264 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['member'],
+    data: function data() {
+        return {
+            memberData: [],
+            tasks: [],
+            teamworkUrl: ''
+        };
+    },
     mounted: function mounted() {
-        console.log('Component mounted.');
+        var _this = this;
+
+        this.fetchData();
+        setInterval(function () {
+            _this.fetchData();
+        }, 30000);
+    },
+
+    computed: {
+        projects: function projects() {
+            return this.tasks.map(function (item, i) {
+                return item['project-name'];
+            }).filter(this.onlyUnique).sort();
+        },
+        capacity: function capacity() {
+            return Math.round(this.member.estimatedMinutes / 60 / 36 * 100);
+        },
+        capacityBarStyle: function capacityBarStyle() {
+            return 'width: ' + this.capacity + '%';
+        }
+    },
+    methods: {
+        fetchData: function fetchData() {
+            var _this2 = this;
+
+            this.getMemberData().then(function (data) {
+                _this2.memberData = data.person;
+                _this2.teamworkUrl = 'https://go.redolive.com/#people/' + _this2.memberData.id + '/tasks';
+            }).then(function (data) {
+                _this2.getMemberTasks().then(function (data) {
+                    _this2.tasks = data;
+                });
+            });
+        },
+        getMemberData: function getMemberData() {
+            return fetch('/api/user/' + this.member.id).then(function (response) {
+                return response.json();
+            });
+        },
+        getMemberTasks: function getMemberTasks() {
+            return fetch('/api/user-tasks/' + this.member.id).then(function (response) {
+                return response.json();
+            });
+        },
+        onlyUnique: function onlyUnique(value, index, self) {
+            return self.indexOf(value) === index;
+        }
     }
 });
 
 /***/ }),
-/* 40 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container" }, [
-      _c("div", { staticClass: "row justify-content-center" }, [
-        _c("div", { staticClass: "col-md-8" }, [
-          _c("div", { staticClass: "card card-default" }, [
-            _c("div", { staticClass: "card-header" }, [
-              _vm._v("Example Component")
+  return _c("div", { staticClass: "w-full sm:w-1/2 xl:w-1/3 mb-4" }, [
+    _c(
+      "div",
+      {
+        staticClass: "bg-white mx-2 shadow-lg rounded-lg overflow-hidden h-full"
+      },
+      [
+        _c("div", { staticClass: "sm:flex sm:items-center px-6 py-4" }, [
+          _c(
+            "a",
+            {
+              staticClass: "block mx-auto",
+              attrs: { href: _vm.teamworkUrl, target: "_blank" }
+            },
+            [
+              _vm.memberData["avatar-url"]
+                ? _c("img", {
+                    staticClass:
+                      "h-16 sm:h-24 rounded-full sm:mb-0 sm:mr-4 sm:ml-0",
+                    attrs: {
+                      src: _vm.memberData["avatar-url"],
+                      alt: _vm.member["first-name"]
+                    }
+                  })
+                : _vm._e()
+            ]
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "text-center sm:text-left sm:flex-grow" }, [
+            _c("div", { staticClass: "mb-4" }, [
+              _c("p", { staticClass: "text-xl leading-tight" }, [
+                _vm._v(
+                  "\n                        " +
+                    _vm._s(_vm.member["first-name"]) +
+                    " " +
+                    _vm._s(_vm.member["last-name"]) +
+                    "\n                    "
+                )
+              ]),
+              _vm._v(" "),
+              _c("p", { staticClass: "text-sm leading-tight text-grey-dark" }, [
+                _vm._v(
+                  "\n                        " +
+                    _vm._s(_vm.member["email-address"]) +
+                    "\n                    "
+                )
+              ])
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
-              _vm._v(
-                "\n                    I'm an example component.\n                "
+            _c("div", [
+              _c(
+                "a",
+                {
+                  staticClass:
+                    "text-xs font-semibold rounded-full px-4 py-1 leading-normal bg-white border border-purple text-purple hover:bg-purple hover:text-white no-underline",
+                  attrs: { href: _vm.teamworkUrl, target: "_blank" }
+                },
+                [
+                  _vm._v(
+                    "\n                        View Tasks\n                    "
+                  )
+                ]
               )
             ])
           ])
+        ]),
+        _vm._v(" "),
+        _c("div", [
+          _c("div", { staticClass: "shadow w-full bg-grey-light" }, [
+            _c(
+              "div",
+              {
+                staticClass:
+                  "bg-blue text-xs leading-none py-1 text-center text-white",
+                style: _vm.capacityBarStyle
+              },
+              [
+                _vm._v(
+                  "\n                    " +
+                    _vm._s(_vm.capacity) +
+                    "%\n                "
+                )
+              ]
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "px-6 py-4" }, [
+          _c("div", { staticClass: "mb-2" }, [
+            _c(
+              "ul",
+              _vm._l(_vm.projects, function(project) {
+                return _c("li", { key: project.id }, [
+                  _vm._v(
+                    "\n                        " +
+                      _vm._s(project) +
+                      "\n                    "
+                  )
+                ])
+              })
+            )
+          ]),
+          _vm._v(
+            "\n            " +
+              _vm._s(_vm.member.estimatedMinutes / 60) +
+              " hrs\n        "
+          )
         ])
-      ])
-    ])
-  }
-]
+      ]
+    )
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-299e239e", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-27240a4b", module.exports)
   }
 }
-
-/***/ }),
-/* 41 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);

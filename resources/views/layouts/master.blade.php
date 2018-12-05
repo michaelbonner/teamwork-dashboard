@@ -14,7 +14,7 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body class="bg-gray-lightest font-sans font-normal antialiased">
-    <div class="flex mt-6">
+    <div class="flex mt-6" id="app">
         @if(Route::has('login'))
             <div class="absolute pin-t pin-r mt-4 mr-4">
                 @auth
@@ -40,6 +40,14 @@
                     <ul class="list-reset flex">
                         <li class="mr-6">
                             <a 
+                                href="{{ url('/') }}" 
+                                class="no-underline hover:underline text-sm font-normal text-teal-darker uppercase pr-6"
+                            >
+                                    {{ __('Home') }}
+                            </a>
+                        </li>
+                        <li class="mr-6">
+                            <a 
                                 href="{{ route('login') }}" 
                                 class="no-underline hover:underline text-sm font-normal text-teal-darker uppercase pr-6"
                             >
@@ -62,6 +70,7 @@
         <div class="mt-6 w-full">
             @yield('content')
         </div>
+    </div>
 
     <!-- Scripts -->
     <script src="{{ mix('js/app.js') }}"></script>

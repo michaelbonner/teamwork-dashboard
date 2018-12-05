@@ -4,7 +4,7 @@
     >
 
         <div 
-            class="bg-white mx-2 shadow-lg rounded-lg overflow-hidden h-full"
+            class="bg-white mx-3 my-2 shadow-lg rounded-lg overflow-hidden h-full"
         >
             <div 
                 class="sm:flex sm:items-center px-6 py-4"
@@ -50,8 +50,12 @@
                 </div>
             </div>
 
-            <div>
-                <div class="shadow w-full bg-grey-light">
+            <div
+                class="overflow-hidden"
+            >
+                <div 
+                    class="shadow w-full bg-grey-light"
+                >
                     <div 
                         class="bg-blue text-xs leading-none py-1 text-center text-white" 
                         :style="capacityBarStyle"

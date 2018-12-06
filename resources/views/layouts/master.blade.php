@@ -36,6 +36,14 @@
                                     {{ __('Dashboard') }}
                             </a>
                         </li>
+                        <li class="mr-6">
+                            <form id="frm-logout" action="{{ route('logout') }}" method="POST">
+                                {{ csrf_field() }}
+                                <button type="submit" class="no-underline hover:underline text-sm font-normal text-teal-darker uppercase">
+                                    {{ __('Logout') }}
+                                </button>
+                            </form>
+                        </li>
                     </ul>
                 @else
                     <ul class="list-reset flex">
